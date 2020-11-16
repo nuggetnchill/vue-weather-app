@@ -5,6 +5,7 @@
         <div class="input-group p-3">
           <input
             v-model="location"
+            v-on:keyup.enter="updateLocation"
             type="text"
             class="form-control "
             placeholder="Enter Location"
@@ -22,7 +23,9 @@
       </div>
       <div class="col-8 offset-2 text-center" v-if="weatherData">
         <div class="card text-white bg-dark mb-3 ">
-          <div class="card-header">Current Weather</div>
+          <div class="card-header">
+            {{ address }}
+          </div>
           <div class="card-body">
             <h4 class="card-title">{{ weatherData.currently.summary }}</h4>
             <div class="card-text temp-icon">
@@ -40,7 +43,7 @@
         </div>
       </div>
     </div>
-    <pre>{{ weatherData }}</pre>
+    <div id="mapContainer"></div>
   </div>
 </template>
 
@@ -51,7 +54,8 @@ export default {
   name: 'home',
   data() {
     return {
-      location: '',
+      location: localStorage.location || '',
+      address: localStorage.address || '',
       weatherData: null,
       icons: {
         'clear-day': '🌞',
@@ -71,13 +75,28 @@ export default {
     };
   },
   mounted() {
-    API.getData().then((data) => {
-      this.weatherData = data;
-    });
+    this.getWeather(
+      localStorage.lat || '37.697948',
+      localStorage.lng || '-97.314835',
+    );
   },
   methods: {
+    getWeather(lat, lng) {
+      localStorage.lat = lat;
+      localStorage.lng = lng;
+      API.getData(lat, lng).then((data) => {
+        API.getAddress(lat, lng).then((response) => {
+          this.address = [response.name, response.street].join(' - ');
+          localStorage.address = this.address;
+        });
+        this.weatherData = data;
+      });
+    },
     updateLocation() {
-      console.log(this.location);
+      localStorage.location = this.location;
+      API.getCoordinates(this.location).then((response) => {
+        this.getWeather(response.latitude, response.longitude);
+      });
     },
   },
 };

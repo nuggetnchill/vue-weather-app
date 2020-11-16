@@ -10,9 +10,8 @@
 - [x] Call API in mounted method of component
 - [x] Add current weather to page
 - [x] Add emojis
-- [] Allow user to enter location
-  - [] Geocode location to lat long
-  - [] Update weather on page
-- [] Show location name
+- [x] Allow user to enter location
+  - [x] Geocode location to lat long
+  - [x] Update weather on page
+- [x] Show location name
 - [] Add weather map to page
-- [ ] Show upcoming forecast
