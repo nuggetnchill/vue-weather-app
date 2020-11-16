@@ -2,10 +2,10 @@
 
 - [x] Generate Vue app with CLI
 - [x] Add Bootstrap CDN
-- [] Add navbar with title
-- [] Signup for DarkSky API
-  - [] Get API Key
-- [] Create API module
+- [x] Add navbar with title
+- [x] Signup for DarkSky API
+  - [x] Get API Key
+- [x] Create API module
   - [] Create function to call API with hard coded lat long
 - [] Call API in mounted method of component
 - [] Add current weather to page
