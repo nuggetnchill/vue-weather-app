@@ -21,6 +21,13 @@
           </div>
         </div>
       </div>
+      <div class="col-8 offset-2 mb-3 text-center" v-if="loading">
+        <h3>Loading...</h3>
+        <img
+          class="loading-logo"
+          src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.wpfaster.org%2Fwp-content%2Fuploads%2F2013%2F06%2Floading-gif.gif&f=1&nofb=1"
+        />
+      </div>
       <div class="col-8 offset-2 text-center" v-if="weatherData">
         <div class="card text-white bg-dark mb-3 ">
           <div class="card-header">
@@ -42,8 +49,23 @@
           </div>
         </div>
       </div>
+      <div class="col-8 offset-2 mb-3 text-center" v-else>
+        <h3>Loading...</h3>
+        <img
+          class="loading-logo"
+          src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.wpfaster.org%2Fwp-content%2Fuploads%2F2013%2F06%2Floading-gif.gif&f=1&nofb=1"
+        />
+      </div>
     </div>
-    <div id="mapContainer"></div>
+    <div class="col-8 offset-2">
+      <iframe
+        id="map-embed-iframe"
+        frameborder="0"
+        height="500px"
+        width="100%"
+        :src="embedURL"
+      ></iframe>
+    </div>
   </div>
 </template>
 
@@ -54,6 +76,8 @@ export default {
   name: 'home',
   data() {
     return {
+      loading: false,
+      embedURL: '',
       location: localStorage.location || '',
       address: localStorage.address || '',
       weatherData: null,
@@ -84,15 +108,20 @@ export default {
     getWeather(lat, lng) {
       localStorage.lat = lat;
       localStorage.lng = lng;
+
+      this.embedURL = API.getEmbedUrl(lat, lng);
+
       API.getData(lat, lng).then((data) => {
         API.getAddress(lat, lng).then((response) => {
           this.address = [response.name, response.street].join(' - ');
           localStorage.address = this.address;
         });
         this.weatherData = data;
+        this.loading = false;
       });
     },
     updateLocation() {
+      this.loading = true;
       localStorage.location = this.location;
       API.getCoordinates(this.location).then((response) => {
         this.getWeather(response.latitude, response.longitude);
@@ -113,5 +142,9 @@ body {
 
 .emoji {
   font-size: 4rem;
+}
+
+.loading-logo {
+  width: 10%;
 }
 </style>

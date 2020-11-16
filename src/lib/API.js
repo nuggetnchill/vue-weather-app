@@ -21,4 +21,8 @@ const getAddress = async (lat, lng) => {
   return data;
 };
 
-export default { getData, getCoordinates, getAddress };
+const getEmbedUrl = (lat, lng) => {
+  return `https://maps.darksky.net/@temperature,${lat},${lng},6?domain="+encodeURIComponent(window.location.href)+"&auth=1525213550_b5fc128e7789bb56048952cc704c8473&embed=true&amp;timeControl=false&amp;fieldControl=false&amp;defaultField=emoji`;
+};
+
+export default { getData, getCoordinates, getAddress, getEmbedUrl };
